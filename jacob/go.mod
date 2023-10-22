@@ -3,12 +3,15 @@ module ssuHackathon2023
 go 1.19
 
 require (
+	cloud.google.com/go/vision v1.2.0
+	github.com/sashabaranov/go-openai v1.16.0
+)
+
+require (
 	cloud.google.com/go v0.110.0 // indirect
 	cloud.google.com/go/compute v1.19.3 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
-	cloud.google.com/go/language v1.12.0 // indirect
 	cloud.google.com/go/longrunning v0.4.1 // indirect
-	cloud.google.com/go/vision v1.2.0 // indirect
 	cloud.google.com/go/vision/v2 v2.7.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect

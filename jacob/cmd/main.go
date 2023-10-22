@@ -14,7 +14,11 @@ func main() {
 
 	log.Print("Listening...\n")
 	//VisionTest("static/images/test1.jpg")
-	dummy := make([]string, 20) 
-	ScrapeRecipes(dummy)
+	dummy := make([]string, 3) 
+	dummy[0] = "fish"
+	dummy[1] = "tomato"
+	dummy[2] = "artichoke"
+	//ScrapeRecipes(dummy)
+	recipeQuery(dummy)
 	http.ListenAndServe(":3000", mux)
 }

@@ -51,6 +51,9 @@ func PopulateAllowedStringsMap() map[string]bool {
 	mp["onion"] = true
 	mp["avacado"] = true
 	mp["green onion"] = true
+	mp["artichoke"] = true
+	mp["carrot"] = true
+	mp["chard"] = true
 	
 	// meat
 	mp["steak"] = true
