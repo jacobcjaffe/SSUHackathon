@@ -9,6 +9,7 @@ import (
 	vision "cloud.google.com/go/vision/apiv1"
 )
 
+/// populate a list of banned words to narrow down the labels
 func PopulateBannedMap() map[string]bool {
 	mp := make(map[string]bool)
 	mp["food"] = true;
@@ -19,6 +20,47 @@ func PopulateBannedMap() map[string]bool {
 	mp["plant"] = true;
 	mp["produce"] = true;
 	mp["wood"] = true;
+	return mp
+}
+
+/// populate a list of allowed words, only these labels can be used
+func PopulateAllowedStringsMap() map[string]bool {
+	mp := make(map[string]bool)
+
+	// fruits
+	mp["apple"] = true
+	mp["banana"] = true
+	mp["cherry"] = true
+	mp["pear"] = true
+	mp["peach"] = true
+
+	// 
+	mp["bread"] = true
+	mp["flour"] = true
+	mp["bean"] = true
+
+	// dairy
+	mp["milk"] = true
+	mp["yogurt"] = true
+	mp["butter"] = true
+
+	// vegetables
+	mp["lettuce"] = true
+	mp["broccoli"] = true
+	mp["peanut"] = true
+	mp["onion"] = true
+	mp["avacado"] = true
+	mp["green onion"] = true
+	
+	// meat
+	mp["steak"] = true
+	mp["beef"] = true
+	mp["chicken"] = true
+	mp["sardine"] = true
+	mp["fish"] = true
+
+	// beverages
+	mp["wine"] = true
 	return mp
 }
 
@@ -56,12 +98,16 @@ func VisionTest(fileName string) (map[string]bool) {
 	}
 
 
+	var margin float32 = .75
 	// copy the results into a string
 	labelMap := make(map[string]bool, 20)
 	for _, label := range labels {
-		labelMap[strings.ToLower(label.GetDescription())] = true
+		if (label.GetScore() >= margin) {
+			labelMap[label.GetDescription()] = true
+		}
+		log.Printf("label: %v, Topicality: %f, " +
+			"Score: %f", label.GetDescription(), label.GetTopicality(), label.GetScore())
 	}
-	label[
 
 	// debug print to log
 	log.Println("original labels: ")
@@ -70,8 +116,8 @@ func VisionTest(fileName string) (map[string]bool) {
 	}
 	log.Println()
 
-	bannedMap := PopulateBannedMap()
-	narrowedMap := NarrowVisionObjects(labelMap, bannedMap)
+	allowed := PopulateAllowedStringsMap()
+	narrowedMap := NarrowVisionObjects(labelMap, allowed)
 	// debugging after
 	log.Println("narrowed labels: ")
 	for str := range narrowedMap {
@@ -81,13 +127,19 @@ func VisionTest(fileName string) (map[string]bool) {
 }
 
 /// function to narrow down the labels by removing popular key words that are irrelevant
-func NarrowVisionObjects(labels map[string]bool, banned map[string]bool) map[string]bool{
+func NarrowVisionObjects(labels map[string]bool, allowed map[string]bool) map[string]bool{
+	// TODO make this more efficient
+	contains := false
 	for label := range labels {
-		for bannedWord := range banned {
-			if strings.Contains(label, bannedWord) {
-				delete(labels, label)
+		contains = false
+		for word := range allowed {
+			if strings.Contains(strings.ToLower(label), word) {
+				contains = true
 				break
 			}
+		}
+		if contains == false {
+			delete(labels, label)
 		}
 	}
 	return labels
