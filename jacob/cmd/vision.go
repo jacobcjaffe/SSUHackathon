@@ -57,6 +57,7 @@ func PopulateAllowedStringsMap() map[string]bool {
 	mp["pepper"] = true
 	mp["eggplang"] = true
 	mp["bear"] = true
+	mp["nut"] = true
 	
 	// meat
 	mp["steak"] = true
