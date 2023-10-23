@@ -3,17 +3,27 @@ package main
 import (
 	"log"
 	"context"
+	"os"
+	"strings"
 	openai "github.com/sashabaranov/go-openai"
 )
 
 func recipeQuery(ingredients []string) string {
+	// get the openai key
+	data, err := os.ReadFile("/home/jacobjaffe/keys/oai.txt")
+	if err != nil {
+		log.Fatalf("unable to use openai key")
+	}
+	key := string(data[:])
+	key = strings.TrimSuffix(key, "\n")
+	log.Print(key)
+
 	// create OpenAI client
-	client := openai.NewClient("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")
+	client := openai.NewClient(key)
 
 	// base query to prompt the recipes
 	query := "what are three individual meals I can make that use all or some of the " +
 		"following ingredients: "
-
 	for _, ingredient := range ingredients {
 		query += ingredient + " "
 	}
@@ -42,6 +52,6 @@ func recipeQuery(ingredients []string) string {
 	}
 
 	log.Println(resp.Choices[0].Message.Content)
-	str := "something"
-	return str
+
+	return resp.Choices[0].Message.Content
 }

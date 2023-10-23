@@ -1,0 +1,86 @@
+{{define "home"}}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Resourceful Recipes</title>
+    </head>
+    <body>
+        <h1>Resourceful Recipes</h1>
+        <h2>Subtitle</h2>
+        <br/>
+        <b> Please upload photos below</b>
+        <hr>
+        <br/>
+
+
+			<p><input type="file" accept ="image/*" id="myFile" name="filename" 
+				onchange="loadFile(event)" ></p>
+			<p><label for="file" style="cursor: pointer;">Upload Image</label></p>
+			<p><img id="output" width="400"/></p>
+			<div><p id="recipes"></p></div>
+
+    <script>
+        var loadFile = function(event) {
+            var image = document.getElementById('output');
+            image.src = URL.createObjectURL(event.target.files[0]);
+			handleSubmit(event)
+        };
+		async function handleSubmit(event) {
+			console.log("init");
+			let input = document.getElementById("myFile");
+			//let photo = event.files[0];
+			let isfile = true;
+
+			if (!input) {
+				console.log("couldn't find file");
+				isfile = false;
+			}
+			else if (!input.files) {
+				console.log("doesn't support files?");
+				isfile = false;
+			}
+			else if (!input.files[0]) {
+				console.log("need to define file first");
+				isfile = false;
+			}
+			if (isfile) {
+				let photo = input.files[0];
+
+				let formData = new FormData();
+				formData.append("photo", photo);
+				//fetch('/upload/image', {method: "POST", body: formData});
+				for(let [name, value] of formData) {
+				}
+
+				const ctrl = new AbortController()    // timeout
+				setTimeout(() => ctrl.abort(), 50000);
+
+				try {
+					let r = await fetch('/upload', 
+						{method: "POST", body: formData, signal: ctrl.signal});
+					console.log("request send")
+					const text = await r.text();
+					event.preventDefault();
+					console.log("IT WORKED HTTP Response Code: ", r.status);
+					console.log(text)
+					var recipe = document.getElementById("recipes");
+					recipe.innerHTML = text;
+				}
+				catch(e) {
+					console.log("we have a problem...", e);
+				}
+			}
+			else {
+				console.log("cant get file to work");
+				event.preventDefault();
+			}
+		}
+	</script>
+        <hr>
+        </a>
+    </body>
+    
+</html>
+{{end}}

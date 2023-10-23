@@ -54,6 +54,9 @@ func PopulateAllowedStringsMap() map[string]bool {
 	mp["artichoke"] = true
 	mp["carrot"] = true
 	mp["chard"] = true
+	mp["pepper"] = true
+	mp["eggplang"] = true
+	mp["bear"] = true
 	
 	// meat
 	mp["steak"] = true
@@ -69,7 +72,7 @@ func PopulateAllowedStringsMap() map[string]bool {
 
 /// method to send the image in binary format to the Google Vision client, 
 /// receives labels of the image contents in JSON format
-func VisionTest(fileName string) (map[string]bool) {
+func VisionTest(fileName string) ([]string) {
 	// TODO: should i copy the results into a string array, or not?
 	ctx := context.Background()
 
@@ -126,7 +129,14 @@ func VisionTest(fileName string) (map[string]bool) {
 	for str := range narrowedMap {
 		log.Println(str)
 	}
-	return narrowedMap
+
+	strArray := make([]string, len(narrowedMap))
+	idx := 0;
+	for key, _ := range narrowedMap {
+		strArray[idx] = key
+		idx++;
+	}
+	return strArray
 }
 
 /// function to narrow down the labels by removing popular key words that are irrelevant

@@ -13,12 +13,9 @@ func main() {
 	mux.HandleFunc("/upload", GetImage)
 
 	log.Print("Listening...\n")
-	//VisionTest("static/images/test1.jpg")
-	dummy := make([]string, 3) 
-	dummy[0] = "fish"
-	dummy[1] = "tomato"
-	dummy[2] = "artichoke"
-	//ScrapeRecipes(dummy)
-	recipeQuery(dummy)
+	/*
+	strArray := VisionTest("static/images/test1.jpg")
+	recipeQuery(strArray)
+	*/
 	http.ListenAndServe(":3000", mux)
 }
